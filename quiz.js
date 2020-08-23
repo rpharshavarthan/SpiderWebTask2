@@ -92,59 +92,63 @@ var arr = [
     options: ["Monkeys", "Lizards", "Hens", "Kites"],
   },
 ];
-var list = [];
+var quesDone = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1];
+var userAnswer = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1];
+var correctAnswer = [3, 0, 3, 2, 2, 2, 2, 0, 3, 0];
 var i = -1;
 var points = 0;
+
 function next() {
   if (i < arr.length - 1) {
     i += 1;
-  } else if (i == arr.length - 1) {
-    for (var q = 1; q <= 4; q++) {
-      document.getElementById(q).style.display = "none";
+    if (i == arr.length - 1) {
+      document.getElementById("next").innerHTML = "finish";
     }
-    document.getElementById("grid2").style.display = "none";
-    document.getElementById("ques").style.display = "none";
-    document.body.style.backgroundImage =
-      "linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(coronavirus-5052231_1280.jpg)";
-    var h1 = document.createElement("H1");
-    h1.innerHTML = "YOUR SCORE" + "<br>" + "<br>" + points + "/" + arr.length;
-    h1.setAttribute("id", "score");
-    document.getElementById("quiz-box").appendChild(h1);
+  } else if (i == arr.length - 1) {
+    score();
   }
-  let question = document.getElementById("ques");
-  question.innerHTML = arr[i].question;
-  document.getElementById("1").innerHTML = arr[i].options[0];
-  document.getElementById("2").innerHTML = arr[i].options[1];
-  document.getElementById("3").innerHTML = arr[i].options[2];
-  document.getElementById("4").innerHTML = arr[i].options[3];
-  for (var p = 1; p <= 4; p++) {
-    document.getElementById(p).setAttribute("onclick", "findAns(this.id)");
-    document
-      .getElementById(p)
-      .setAttribute("onmouseover", "mouseOver(this.id)");
-    document.getElementById(p).setAttribute("onmouseout", "mouseOut(this.id)");
-    document.getElementById(p).style.fontSize = "1.1em";
-    document.getElementById(p).style.fontWeight = "500";
-    document.getElementById(p).style.color = "white";
-    document.getElementById(p).style.backgroundColor = "rgba(0, 0, 0, 0.5)";
-  }
+  showQuestion(i);
 }
 function previous() {
   if (i > 0) {
     i -= 1;
   }
-  let question = document.getElementById("ques");
-  question.innerHTML = arr[i].question;
-  document.getElementById("1").innerHTML = arr[i].options[0];
-  document.getElementById("2").innerHTML = arr[i].options[1];
-  document.getElementById("3").innerHTML = arr[i].options[2];
-  document.getElementById("4").innerHTML = arr[i].options[3];
+  if (i < arr.length - 1) {
+    document.getElementById("next").innerHTML = "next";
+  }
+  showQuestion(i);
 }
-function findAns(id) {
+function showQuestion(i) {
+  document.getElementById("ques").innerHTML = arr[i].question;
+  for (var k = 0; k < 4; k++) {
+    if (quesDone[i] == i && userAnswer[i] == k) {
+      document.getElementById(k).innerHTML = arr[i].options[k];
+      document.getElementById(k).removeAttribute("onclick");
+      if (correctAnswer[i] == k) {
+        right(k);
+      } else {
+        wrong(k);
+      }
+    } else if (quesDone[i] == i && userAnswer[i] != k) {
+      document.getElementById(k).innerHTML = arr[i].options[k];
+      document.getElementById(k).removeAttribute("onclick");
+      notAttempted(k);
+    } else if (quesDone[i] == -1 && userAnswer[i] == -1) {
+      console.log("3rd");
+      document.getElementById(k).innerHTML = arr[i].options[k];
+      document.getElementById(k).setAttribute("onclick", "checkAns(this.id)");
+      notAttempted(k);
+    }
+  }
+}
+function checkAns(id) {
+  quesDone[i] = i;
+  userAnswer[i] = id;
+  console.log(quesDone);
+  console.log(userAnswer);
   var clicked_option = document.getElementById(id).innerHTML;
   if (clicked_option == arr[i].answer) {
     points += 1;
-    console.log(points);
     right(id);
   } else {
     wrong(id);
@@ -156,10 +160,8 @@ function right(id) {
   document.getElementById(id).style.fontWeight = "600";
   document.getElementById(id).style.color = "lime";
   document.getElementById(id).style.backgroundColor = "rgba(0, 0, 0, 0.75)";
-  for (var i = 1; i <= 4; i++) {
+  for (var i = 0; i < 4; i++) {
     document.getElementById(i).removeAttribute("onclick");
-    document.getElementById(i).removeAttribute("onmouseover");
-    document.getElementById(i).removeAttribute("onmouseout");
   }
 }
 
@@ -168,21 +170,21 @@ function wrong(id) {
   document.getElementById(id).style.fontWeight = "600";
   document.getElementById(id).style.color = "red";
   document.getElementById(id).style.backgroundColor = "rgba(0, 0, 0, 0.75)";
-  for (var i = 1; i <= 4; i++) {
+  for (var i = 0; i < 4; i++) {
     document.getElementById(i).removeAttribute("onclick");
-    document.getElementById(i).removeAttribute("onmouseover");
-    document.getElementById(i).removeAttribute("onmouseout");
   }
 }
-function mouseOver(id) {
-  document.getElementById(id).style.fontSize = "1.2em";
-  document.getElementById(id).style.fontWeight = "600";
-  document.getElementById(id).style.color = "goldenrod";
-  document.getElementById(id).style.backgroundColor = "rgba(0, 0, 0, 0.75)";
-}
-function mouseOut(id) {
+function notAttempted(id) {
   document.getElementById(id).style.fontSize = "1.1em";
   document.getElementById(id).style.fontWeight = "500";
   document.getElementById(id).style.color = "white";
   document.getElementById(id).style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+}
+function score() {
+  document.getElementById("scoreCard").style.display = "flex";
+  document.getElementById("Score").innerHTML =
+    "YOUR SCORE:" + points + "/" + arr.length;
+  document.getElementById("quiz-box").style.display = "none";
+  document.getElementById("next").style.display = "none";
+  document.getElementById("prev").style.display = "none";
 }
