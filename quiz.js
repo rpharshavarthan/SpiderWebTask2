@@ -63,19 +63,14 @@ var arr = [
   {
     id: 7,
     question:
-      "8. Name a clinical trial in which blood is transfused from recovered COVID-19 patients to a coronavirus patient who is in critical condition?",
-    answer: "Plasma Therapy",
-    options: [
-      "Plasma Therapy",
-      "Solidarity",
-      "Remdesivir",
-      "Hydroxychloroquine",
-    ],
+      "8. How long is average the incubation period for Wuhan coronavirus?",
+    answer: "5-6 Days",
+    options: ["5-6 Days", "12-24 Hours", "1 Month", "3-4 Weeks"],
   },
   {
     id: 8,
     question:
-      "9. How many countries, areas or territories are suffering from novel coronavirus outbreak in the World?",
+      "9. How many countries are suffering from novel coronavirus outbreak in the World?",
     answer: "More than 200",
     options: [
       "More than 50",
